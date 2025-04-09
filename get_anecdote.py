@@ -1,6 +1,6 @@
 import warnings
 warnings.filterwarnings("ignore")
-from transformers import AutoModelForCausalLM, AutoTokenizer, BertForSequenceClassification, BertTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, DistilBertTokenizer, DistilBertForSequenceClassification
 from peft import PeftModel
 import torch
 import numpy as np
@@ -8,15 +8,16 @@ import os
 
 
 
-def get_anecdote(prompt, n =5):
+def get_anecdote(prompt, n =5, top_1 = True):
     '''
-    Генерирует по промпту n ответов и выбирает из них самый смешной
+    Генерирует по промпту n ответов и выбирает из них самый смешной, если top_1 == True,
+    
+    Выдаёт list всех ответов иначе. 
     '''
     model_name = "Qwen/Qwen2.5-1.5B-Instruct"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     # checkpath = os.path.join('qwen2.5-lora-jokes', 'v2.0', 'checkpoint-764_scoutie' ) # scoutie dataset
     checkpath = os.path.join('qwen2.5-lora-jokes', 'v2.0', 'checkpoint-2906_parsed' ) # parsed dataset
-    # checkpath = 'qwen2.5-lora-jokes/v2.0/checkpoint-764'
     model = AutoModelForCausalLM.from_pretrained(checkpath, trust_remote_code=True)
     # model = PeftModel.from_pretrained(base_model, checkpath)
     # model = model.merge_and_unload(Пе)
@@ -44,8 +45,8 @@ def get_anecdote(prompt, n =5):
             output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, [generated_ids[i]])
         ], skip_special_tokens=True)[0] for i in range(len(generated_ids))]
     # Загрузка модели
-    bert = BertForSequenceClassification.from_pretrained('funny_jokes_classifier.model')
-    bert_tokenizer = BertTokenizer.from_pretrained('funny_jokes_classifier.tokenizer')
+    bert = DistilBertForSequenceClassification.from_pretrained('funny_jokes_classifier.model')
+    bert_tokenizer = DistilBertTokenizer.from_pretrained('funny_jokes_classifier.tokenizer')
     MAX_LEN= 128
     # Предсказание на новом тексте
     def predict_funny_score(model, joke, tokenizer):
@@ -75,12 +76,15 @@ def get_anecdote(prompt, n =5):
         return 1 / (1 + np.exp(-prediction))
     max = 0
     i_max = 0
-    for i, anecdote in enumerate(anecdotes):
-        score = predict_funny_score(bert, anecdote, bert_tokenizer)
-        if score > max:
-            max = score
-            i_max = i
-    return anecdotes[i_max]
+    if top_1:
+        for i, anecdote in enumerate(anecdotes):
+            score = predict_funny_score(bert, anecdote, bert_tokenizer)
+            if score > max:
+                max = score
+                i_max = i
+        return anecdotes[i_max]
+    else:
+        return anecdotes
 
 def main():
     
