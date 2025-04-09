@@ -14,7 +14,8 @@ def get_anecdote(prompt, n =5):
     '''
     model_name = "Qwen/Qwen2.5-1.5B-Instruct"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    checkpath = os.path.join('qwen2.5-lora-jokes', 'v2.0', 'checkpoint-764' )
+    # checkpath = os.path.join('qwen2.5-lora-jokes', 'v2.0', 'checkpoint-764_scoutie' ) # scoutie dataset
+    checkpath = os.path.join('qwen2.5-lora-jokes', 'v2.0', 'checkpoint-2906_parsed' ) # parsed dataset
     # checkpath = 'qwen2.5-lora-jokes/v2.0/checkpoint-764'
     model = AutoModelForCausalLM.from_pretrained(checkpath, trust_remote_code=True)
     # model = PeftModel.from_pretrained(base_model, checkpath)
