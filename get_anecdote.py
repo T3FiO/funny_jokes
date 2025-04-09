@@ -1,7 +1,7 @@
 import warnings
 warnings.filterwarnings("ignore")
 from transformers import AutoModelForCausalLM, AutoTokenizer, DistilBertTokenizer, DistilBertForSequenceClassification
-from peft import PeftModel
+# from peft import PeftModel
 import torch
 import numpy as np
 import os
