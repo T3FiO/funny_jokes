@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, DistilBertTokenizer, DistilBertForSequenceClassification
 import os
 
@@ -13,7 +14,7 @@ async def lifespan(app: FastAPI):
 
     checkpath = os.path.join('../../qwen2.5-lora-jokes', 'v2.0', 'checkpoint-2906_parsed')  # parsed dataset
     app.state.qwen_tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-1.5B-Instruct")
-    app.state.qwen_model = AutoModelForCausalLM.from_pretrained(checkpath, trust_remote_code=True)
+    app.state.qwen_model = PeftModel.from_pretrained(AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-1.5B-Instruct"), checkpath)
     app.state.qwen_model.eval()
 
     app.state.bert_model = DistilBertForSequenceClassification.from_pretrained('../../funny_jokes_classifier.model')
