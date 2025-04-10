@@ -1,3 +1,0 @@
-funny_jokes_classifier.model/ filter=lfs diff=lfs merge=lfs -text
-funny_jokes_classifier.tokenizer/ filter=lfs diff=lfs merge=lfs -text
-qwen2.5-lora-jokes/ filter=lfs diff=lfs merge=lfs -text
