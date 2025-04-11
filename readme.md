@@ -29,3 +29,6 @@ python /experiments/get_anecdote.py
 
 **jokes.yml** -- conda окружение для обучения.
 
+## Ссылка на залитый на хаггинфейс код
+
+https://huggingface.co/spaces/Anecs/anecdote_generator_ru
