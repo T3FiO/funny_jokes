@@ -38,7 +38,7 @@ async def lifespan(app: FastAPI):
     )
 
     app.state.dif_model = StableDiffusionPipeline.from_pretrained(
-        "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float32
+        "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float32, safety_checker = None,
     )
 
     print("Models and tokenizers initialized.")

@@ -21,10 +21,11 @@ python /experiments/get_anecdote.py
 
 **/parser/parser.py** - парсер, использовавшийся при парсинге **anekdot.ru**.
 
+**data/** -- директория с датасетами.
+
 ## Environment
 
 **requirements.txt** - pip зависимости для инференса и деплоя.
 
 **jokes.yml** -- conda окружение для обучения.
 
-**data/** -- директория с датасетами.
